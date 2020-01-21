@@ -1,0 +1,39 @@
+{
+  "name": "tests",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "test:unit": "vue-cli-service test:unit"
+  },
+  "dependencies": {
+    "buefy": "^0.7.2",
+    "moment": "^2.24.0",
+    "normalize.css": "7.0.0",
+    "portal-vue": "^1.5.1",
+    "core-js": "^3.4.4",
+    "vue": "^2.6.10",
+    "vuex": "^3.1.2",
+    "vuex-pathify": "^1.2.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.1.0",
+    "@vue/cli-plugin-unit-jest": "^4.1.0",
+    "@vue/cli-plugin-vuex": "^4.1.0",
+    "@vue/cli-service": "^4.1.0",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "vue-template-compiler": "^2.6.10",
+    "node-sass": "^4.5.3",
+    "sass-loader": "^6.0.6",
+    "css-loader": "^0.28.7",
+    "vue-loader": "^13.0.5"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions"
+  ],
+  "jest": {
+    "preset": "@vue/cli-plugin-unit-jest"
+  }
+}

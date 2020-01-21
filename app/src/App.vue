@@ -4,19 +4,22 @@
     <div class="columns">
       <div class="column is-full">
         <app-header :title="title"></app-header>
+        sdfsdfd
+        <stepper></stepper>
       </div>
     </div>
-    <!-- <stepper / > -->
   </div>
 </template>
 
 <script>
-//import stepper from "./components/Stepper/Stepper";
+import stepper from "./components/Stepper/Stepper";
+import AppHeader from "./components/AppHeader/AppHeader";
 export default {
-  name: "app"
-  /* components: {
-    stepper
-  } */
+  name: "app",
+  components: {
+    stepper,
+    AppHeader
+  }
 };
 </script>
 
