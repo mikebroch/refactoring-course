@@ -631,12 +631,12 @@
 </template>
 
 <script>
-import AvailabilityDialog from '../components/AvailabilityDialog'
-import { LMap, LTileLayer, LMarker } from 'vue2-leaflet'
-import L from 'leaflet'
-import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch'
-import 'leaflet/dist/leaflet.css'
-import 'leaflet-geosearch/assets/css/leaflet.css'
+import AvailabilityDialog from '../components/AvailabilityDialog';
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import L from 'leaflet';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import 'leaflet/dist/leaflet.css';
+import 'leaflet-geosearch/assets/css/leaflet.css';
 export default {
   name: 'AccomodationUI',
   components: {
@@ -815,45 +815,45 @@ export default {
       //url: 'https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
       url: 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=en',
 
-      //attribution: '&copy; <a href="http://osm.org/copyright">OSM</a>'
+      //attribution: '&copy; <a href='http://osm.org/copyright'>OSM</a>'
       attribution:
-        '<a href="https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use">Wikimedia maps</a> | Map data &copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    }
+        '<a href='https://foundation.wikimedia.org/wiki/Maps_Terms_of_Use'>Wikimedia maps</a> | Map data &copy; <a href='http://openstreetmap.org/copyright'>OpenStreetMap contributors</a>'
+    };
   },
 
   watch: {
     filterText(val) {
-      this.$refs.tree.filter(val)
+      this.$refs.tree.filter(val);
     },
 
     dialogGlobalState: function(val) {
-      this.dialog.visible = false
+      this.dialog.visible = false;
     },
 
     dialogGlobalState2: function(val) {
-      this.dialogRoom.visible = false
+      this.dialogRoom.visible = false;
     },
 
     dialogGlobalState3: function(val) {
-      this.dialogBed.visible = false
+      this.dialogBed.visible = false;
     },
 
     dialogGlobalBuildingState: function(val) {
-      this.dialogBuilding.visible = false
+      this.dialogBuilding.visible = false;
     }
   },
 
   beforeDestroy() {
-    this.$store.commit('deleteSelectedAccommodation')
-    this.$store.commit('deleteSelectedRooms')
-    this.$store.commit('deleteSelectedBeds')
+    this.$store.commit('deleteSelectedAccommodation');
+    this.$store.commit('deleteSelectedRooms');
+    this.$store.commit('deleteSelectedBeds');
   },
   mounted() {
-    L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.3.4/dist/images/'
+    L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.3.4/dist/images/';
   },
   computed: {
     loading() {
-      return this.$store.getters.loading
+      return this.$store.getters.loading;
     },
     listOfAccommodations() {
       /* if (this.$route.name == 'accommodationui') {
@@ -861,23 +861,23 @@ export default {
       } else {
         return this.$store.getters.getListOfAccommodationsResettlement
       } */
-      return this.$store.getters.getListOfAccommodations
+      return this.$store.getters.getListOfAccommodations;
     },
 
     listOfAvailability() {
-      return this.$store.getters.getListOfAvailabilityAccommodation
+      return this.$store.getters.getListOfAvailabilityAccommodation;
     },
     listOfEmptyAvailability() {
-      return this.$store.getters.getListOfAvailabilityAccommodationEmpty
+      return this.$store.getters.getListOfAvailabilityAccommodationEmpty;
     },
     listOfBuildingTypes() {
-      return this.$store.getters.getListOfBuildingTypes
+      return this.$store.getters.getListOfBuildingTypes;
     },
     markerObj() {
       return {
         lat: this.formBuilding.latitude,
         lng: this.formBuilding.longitude
-      }
+      };
     },
 
     isDisabled() {
@@ -886,9 +886,9 @@ export default {
         this.$store.state.rooms.selectedRooms.length > 0 ||
         this.$store.state.beds.selectedBeds.length > 0
       ) {
-        return false
+        return false;
       } else {
-        return true
+        return true;
       }
     },
 
@@ -897,81 +897,76 @@ export default {
         this.$store.getters.getListOfAccommodations.length == 0 ||
         this.$store.getters.getListOfAccommodationsResettlement.length == 0
       ) {
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     },
 
     form() {
       if (this.dialog.submitButton === 'Change') {
-        return this.currentAccommodation
+        return this.currentAccommodation;
       } else {
-        this.newAccommodation.event = this.$route.params.event_id
-        return this.newAccommodation
+        this.newAccommodation.event = this.$route.params.event_id;
+        return this.newAccommodation;
       }
     },
 
     formBuilding() {
       if (this.dialogBuilding.submitButton === 'Change') {
-        return this.currentBuilding
+        return this.currentBuilding;
       } else {
-        return this.newBuilding
+        return this.newBuilding;
       }
     },
 
     dialogGlobalState() {
-      return this.$store.getters.dialogState
+      return this.$store.getters.dialogState;
     },
     dialogGlobalState2() {
-      return this.$store.getters.dialogRoomState
+      return this.$store.getters.dialogRoomState;
     },
     dialogGlobalState3() {
-      return this.$store.getters.dialogBedState
+      return this.$store.getters.dialogBedState;
     },
     dialogGlobalBuildingState() {
-      return this.$store.getters.dialogBuildingState
+      return this.$store.getters.dialogBuildingState;
     }
   },
   created() {
-    this.$store.dispatch('updateAccommodationsList', {
-      event_id: this.$route.params.event_id,
-      filterParams: this.filterParams
-    })
+    this.reloadAccommodations();
   },
 
   methods: {
+    clearSelectedItems() {
+      this.$store.commit('deleteSelectedAccommodation');
+      this.$store.commit('deleteSelectedRooms');
+      this.$store.commit('deleteSelectedBeds');
+      this.selectedAccommodations = [];
+      this.selectedRooms = [];
+      this.selectedBeds = [];
+    },
+    reloadAccommodations() {
+      this.$store.dispatch('updateAccommodationsList', {
+        event_id: this.$route.params.event_id,
+        filterParams: this.filterParams
+      });
+    },
     /* Create-update Accommodation */
     async submitAccommodationData(form) {
       if (this.dialog.submitButton === 'Create') {
-        await this.$store.dispatch('createNewAccommodation', this.form)
-        this.$store.commit('deleteSelectedAccommodation')
-        this.$store.commit('deleteSelectedRooms')
-        this.$store.commit('deleteSelectedBeds')
-        this.selectedAccommodations = []
-        this.selectedRooms = []
-        this.selectedBeds = []
-        this.$store.dispatch('updateAccommodationsList', {
-          event_id: this.$route.params.event_id,
-          filterParams: this.filterParams
-        })
+        await this.$store.dispatch('createNewAccommodation', this.form);
+        this.clearSelectedItems();
+        this.reloadAccommodations();
       } else {
-        await this.$store.dispatch('updateAccommodation', this.form)
-        this.$store.commit('deleteSelectedAccommodation')
-        this.$store.commit('deleteSelectedRooms')
-        this.$store.commit('deleteSelectedBeds')
-        this.selectedAccommodations = []
-        this.selectedRooms = []
-        this.selectedBeds = []
-        this.$store.dispatch('updateAccommodationsList', {
-          event_id: this.$route.params.event_id,
-          filterParams: this.filterParams
-        })
+        await this.$store.dispatch('updateAccommodation', this.form);
+        this.clearSelectedItems();
+        this.reloadAccommodations();
       }
     },
     editNodeClick(data, node) {
       if (!this.editableNodes) {
-        return
+        return;
       } else {
         if (node.level === 1) {
           this.currentAccommodation = {
@@ -981,15 +976,15 @@ export default {
             building: data.building.id,
             status: data.status.id,
             event: this.$store.state.currentEvent.id
-          }
-          this.openUpdateDialogAccommodation()
+          };
+          this.openUpdateDialogAccommodation();
         } else if (node.level === 2) {
           this.formChangeRoom = {
             id: data.id,
             room_door: data.room_door,
             accommodation: node.parent.data.id
-          }
-          this.openUpdateDialogRoom()
+          };
+          this.openUpdateDialogRoom();
         } else {
           this.formChangeBed = {
             id: data.id,
@@ -998,8 +993,8 @@ export default {
             sheets_required: data.sheets_required,
             is_optional: data.is_optional,
             room: node.parent.data.id
-          }
-          this.openUpdateDialogBed()
+          };
+          this.openUpdateDialogBed();
         }
       }
     },
@@ -1011,18 +1006,10 @@ export default {
         children: [],
         room_door: 'Y',
         accommodation: data.id
-      }
-      await this.$store.dispatch('createNewRoom', newChild)
-      this.$store.commit('deleteSelectedAccommodation')
-      this.$store.commit('deleteSelectedRooms')
-      this.$store.commit('deleteSelectedBeds')
-      this.selectedAccommodations = []
-      this.selectedRooms = []
-      this.selectedBeds = []
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
+      };
+      await this.$store.dispatch('createNewRoom', newChild);
+      this.clearSelectedItems();
+      this.reloadAccommodations();
     },
     /* Create Bed */
     async createNewBed(data) {
@@ -1034,83 +1021,58 @@ export default {
         sheets_required: false,
         is_optional: false,
         room: data.id
-      }
-      await this.$store.dispatch('createNewBed', newChild)
-      this.$store.commit('deleteSelectedAccommodation')
-      this.$store.commit('deleteSelectedRooms')
-      this.$store.commit('deleteSelectedBeds')
-      this.selectedAccommodations = []
-      this.selectedRooms = []
-      this.selectedBeds = []
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
+      };
+      await this.$store.dispatch('createNewBed', newChild);
+      this.clearSelectedItems();
+      this.reloadAccommodations();
     },
     /* Update Room */
     async submitRoomData(formChangeRoom) {
-      await this.$store.dispatch('updateRoom', formChangeRoom)
-      this.$store.commit('deleteSelectedAccommodation')
-      this.$store.commit('deleteSelectedRooms')
-      this.$store.commit('deleteSelectedBeds')
-      this.selectedAccommodations = []
-      this.selectedRooms = []
-      this.selectedBeds = []
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
-      //this.dialogRoom = false;
+      await this.$store.dispatch('updateRoom', formChangeRoom);
+      this.clearSelectedItems();
+      this.reloadAccommodations();
     },
     /* Update Bed */
     async submitBedData(formChangeBed) {
-      await this.$store.dispatch('updateBed', this.formChangeBed)
-      this.$store.commit('deleteSelectedAccommodation')
-      this.$store.commit('deleteSelectedRooms')
-      this.$store.commit('deleteSelectedBeds')
-      this.selectedAccommodations = []
-      this.selectedRooms = []
-      this.selectedBeds = []
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      }) // ? update list
+      await this.$store.dispatch('updateBed', this.formChangeBed);
+      this.clearSelectedItems();
+      this.reloadAccommodations();
     },
     /* Create-update Building */
     async submitBuildingData(formBuilding) {
       if (this.dialogBuilding.submitButton === 'Create') {
         if (this.formBuilding.stars == 0) {
-          this.formBuilding.stars = null
+          this.formBuilding.stars = null;
         }
-        await this.$store.dispatch('createNewBuilding', this.formBuilding)
-        this.$store.dispatch('updateBuildingsList')
+        await this.$store.dispatch('createNewBuilding', this.formBuilding);
+        this.$store.dispatch('updateBuildingsList');
       } else {
-        await this.$store.dispatch('updateBuilding', this.formBuilding)
-        this.$store.dispatch('updateBuildingsList')
+        await this.$store.dispatch('updateBuilding', this.formBuilding);
+        this.$store.dispatch('updateBuildingsList');
       }
     },
 
     handleCheckAllChange(val) {
       if (this.checkAll) {
-        this.accommodations = this.$store.getters.getListOfAccommodations
+        this.accommodations = this.$store.getters.getListOfAccommodations;
         // this.$route.name == 'accommodationui'
         //   ? this.$store.getters.getListOfAccommodations
         //   : this.$store.getters.getListOfAccommodationsResettlement
-        this.$refs.tree.setCheckedNodes(this.accommodations)
+        this.$refs.tree.setCheckedNodes(this.accommodations);
       } else {
-        this.$refs.tree.setCheckedNodes([])
+        this.$refs.tree.setCheckedNodes([]);
       }
     },
     /* Select */
     handleSelectionChange(selectedData, checked) {
       if (selectedData.type == 'accommodation') {
         if (checked) {
-          this.selectedAccommodations.push(selectedData)
+          this.selectedAccommodations.push(selectedData);
         } else {
           this.selectedAccommodations.splice(
             this.selectedAccommodations.findIndex(v => v === selectedData),
             1
-          )
+          );
         }
         if (
           (this.selectedAccommodations.length != 0 &&
@@ -1119,34 +1081,34 @@ export default {
           this.selectedAccommodations.length ===
             this.$store.getters.getListOfAccommodationsResettlement.length
         ) {
-          this.checkAll = true
+          this.checkAll = true;
         } else {
-          this.checkAll = false
+          this.checkAll = false;
         }
         this.$store.commit(
           'addSelectedAccommodations',
           this.selectedAccommodations
-        )
+        );
       } else if (selectedData.type == 'room') {
         if (checked) {
-          this.selectedRooms.push(selectedData)
+          this.selectedRooms.push(selectedData);
         } else {
           this.selectedRooms.splice(
             this.selectedRooms.findIndex(v => v === selectedData),
             1
-          )
+          );
         }
-        this.$store.commit('addSelectedRooms', this.selectedRooms)
+        this.$store.commit('addSelectedRooms', this.selectedRooms);
       } else {
         if (checked) {
-          this.selectedBeds.push(selectedData)
+          this.selectedBeds.push(selectedData);
         } else {
           this.selectedBeds.splice(
             this.selectedBeds.findIndex(v => v === selectedData),
             1
-          )
+          );
         }
-        this.$store.commit('addSelectedBeds', this.selectedBeds)
+        this.$store.commit('addSelectedBeds', this.selectedBeds);
       }
     },
     /* Delete */
@@ -1155,42 +1117,30 @@ export default {
         this.$store.state.beds.selectedBeds.map(item =>
           this.$store.dispatch('deleteBed', item)
         )
-      )
-      this.$store
-        .dispatch('updateAccommodationsList', {
-          event_id: this.$route.params.event_id,
-          filterParams: this.filterParams
-        })
+      );
+      this.reloadAccommodations()
         .then(() => this.$store.commit('deleteSelectedBeds'))
         .then(() => (this.selectedBeds = []))
         .then(() => {
-          this.active = false
-        })
+          this.active = false;
+        });
       await Promise.all(
         this.$store.state.rooms.selectedRooms.map(item =>
           this.$store.dispatch('deleteRoom', item)
         )
-      )
-      this.$store
-        .dispatch('updateAccommodationsList', {
-          event_id: this.$route.params.event_id,
-          filterParams: this.filterParams
-        })
+      );
+      this.reloadAccommodations()
         .then(() => this.$store.commit('deleteSelectedRooms'))
         .then(() => (this.selectedRooms = []))
         .then(() => {
-          this.active = false
-        })
+          this.active = false;
+        });
       await Promise.all(
         this.$store.state.accommodations.selectedAccommodations.map(item =>
           this.$store.dispatch('deleteAccommodation', item)
         )
-      )
-      this.$store
-        .dispatch('updateAccommodationsList', {
-          event_id: this.$route.params.event_id,
-          filterParams: this.filterParams
-        })
+      );
+      this.reloadAccommodations()
         .then(() => this.$store.commit('deleteSelectedAccommodation'))
         .then(() => (this.selectedAccommodations = []))
         .then(
@@ -1199,38 +1149,38 @@ export default {
               this.selectedAccommodations.length == 0 ? false : true)
         )
         .then(() => {
-          this.active = false
-        })
+          this.active = false;
+        });
     },
 
     openDialog(attr) {
-      this.dialog.visible = true
-      this.dialog.title = attr.title
-      this.dialog.submitButton = attr.submitButton
+      this.dialog.visible = true;
+      this.dialog.title = attr.title;
+      this.dialog.submitButton = attr.submitButton;
     },
 
     openDialogBuilding(attr) {
-      this.dialogBuilding.visible = true
-      this.dialogBuilding.title = attr.title
-      this.dialogBuilding.submitButton = attr.submitButton
+      this.dialogBuilding.visible = true;
+      this.dialogBuilding.title = attr.title;
+      this.dialogBuilding.submitButton = attr.submitButton;
     },
 
     openCreateDialog() {
       const attr = {
         title: 'Create accommodation',
         submitButton: 'Create'
-      }
-      this.newAccommodation = Object.assign({}, this.emptyAccommodation)
-      this.openDialog(attr)
+      };
+      this.newAccommodation = Object.assign({}, this.emptyAccommodation);
+      this.openDialog(attr);
     },
 
     openCreateDialogBuilding() {
       const attr = {
         title: 'Create building',
         submitButton: 'Create'
-      }
-      this.newBuilding = Object.assign({}, this.emptyBuilding)
-      this.openDialogBuilding(attr)
+      };
+      this.newBuilding = Object.assign({}, this.emptyBuilding);
+      this.openDialogBuilding(attr);
     },
 
     changebuilding(data) {
@@ -1242,72 +1192,69 @@ export default {
         address: data.address,
         latitude: data.latitude,
         longitude: data.longitude
-      }
-      this.openUpdateDialogBuilding()
+      };
+      this.openUpdateDialogBuilding();
     },
 
     openUpdateDialogBuilding() {
       const attr = {
         title: 'Change building',
         submitButton: 'Change'
-      }
-      this.openDialogBuilding(attr)
+      };
+      this.openDialogBuilding(attr);
     },
 
     async deleteBuilding(data) {
-      await this.$store.dispatch('deleteBuilding', data.id)
-      this.$store.dispatch('updateBuildingsList')
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
+      await this.$store.dispatch('deleteBuilding', data.id);
+      this.$store.dispatch('updateBuildingsList');
+      this.reloadAccommodations();
     },
 
     openCreateAvailabilityDialog(data) {
       this.$store.dispatch(
         'updateEmptyAvailabilityListForAccommodation',
         data.id
-      )
-      this.$store.dispatch('updateAvailabilityListForAccommodation', data.id)
-      this.tmp = data.id
-      this.newAvailability = Object.assign({}, this.emptyAvailability)
-      this.dialogAvailability.visible = true
+      );
+      this.$store.dispatch('updateAvailabilityListForAccommodation', data.id);
+      this.tmp = data.id;
+      this.newAvailability = Object.assign({}, this.emptyAvailability);
+      this.dialogAvailability.visible = true;
     },
 
     openUpdateDialogAccommodation() {
       const attr = {
         title: 'Change accommodation',
         submitButton: 'Change'
-      }
-      this.openDialog(attr)
+      };
+      this.openDialog(attr);
     },
 
     openUpdateDialogRoom() {
-      this.dialogRoom.visible = true
+      this.dialogRoom.visible = true;
       //this.dialog.title = attr.title;
       //this.dialog.submitButton = attr.submitButton;
     },
 
     openUpdateDialogBed() {
-      this.dialogBed.visible = true
+      this.dialogBed.visible = true;
     },
 
     openBuildingDialog() {
-      this.dialogBuilding.visible = true
+      this.dialogBuilding.visible = true;
       /* this.$nextTick(() => {
         this.$refs.roleName.focus();
       }); */
     },
 
     closeDialog() {
-      this.$store.commit('clearError')
-      this.newAvailabilityMas = []
-      this.$refs.form.resetFields()
+      this.$store.commit('clearError');
+      this.newAvailabilityMas = [];
+      this.$refs.form.resetFields();
     },
 
     resetServerError(field) {
       if (this.$store.state.error) {
-        this.$store.state.error[field] = ''
+        this.$store.state.error[field] = '';
       }
     },
 
@@ -1317,19 +1264,19 @@ export default {
         night: payload.night,
         price: payload.value
         //is_booked: false
-      }
+      };
       this.newAvailabilityMas.map(item => {
         if (item.night === sth.night) {
-          item.price = sth.price
+          item.price = sth.price;
           this.newAvailabilityMas.splice(
             this.newAvailabilityMas.findIndex(v => v.night === sth.night),
             1
-          )
+          );
         }
-      })
-      this.newAvailabilityMas.push(sth)
+      });
+      this.newAvailabilityMas.push(sth);
       if (sth.price === '') {
-        this.newAvailabilityMas.pop(sth)
+        this.newAvailabilityMas.pop(sth);
       }
       /* this.newAvailability.accommodation = this.tmp
       this.newAvailability.night = payload.night
@@ -1347,108 +1294,94 @@ export default {
         this.newAvailabilityMas.map(item =>
           this.$store.dispatch('createNewAvailability', item)
         )
-      )
+      );
       //.then(() => (this.dialogAvailability.visible = false))
-      this.$store.dispatch('updateAvailabilityListForAccommodation', this.tmp)
+      this.$store.dispatch('updateAvailabilityListForAccommodation', this.tmp);
       this.$store
         .dispatch('updateEmptyAvailabilityListForAccommodation', this.tmp)
-        .then(() => (this.newAvailabilityMas = []))
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
+        .then(() => (this.newAvailabilityMas = []));
+      this.reloadAccommodations();
     },
 
     changeAvailability(payload) {
-      let data
+      let data;
       if (payload.paramName === 'price') {
         data = {
           id: payload.id,
           price: payload.value
-        }
+        };
       } else {
         data = {
           id: payload.id
           //is_booked: payload.value
-        }
+        };
       }
-      this.$store.dispatch('partialUpdateAvailability', data)
+      this.$store.dispatch('partialUpdateAvailability', data);
     },
 
     async deleteAvailability(item) {
-      await this.$store.dispatch('deleteAvailability', item.id)
-      this.$store.dispatch('updateAvailabilityListForAccommodation', this.tmp)
+      await this.$store.dispatch('deleteAvailability', item.id);
+      this.$store.dispatch('updateAvailabilityListForAccommodation', this.tmp);
       this.$store.dispatch(
         'updateEmptyAvailabilityListForAccommodation',
         this.tmp
-      )
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
+      );
+      this.reloadAccommodations();
     },
 
     initMapControls() {
-      const provider = new OpenStreetMapProvider()
+      const provider = new OpenStreetMapProvider();
 
       const searchControl = new GeoSearchControl({
         provider: provider,
         style: 'bar',
         autoClose: true,
         keepResult: true
-      })
-      this.$refs.map.mapObject.addControl(searchControl)
+      });
+      this.$refs.map.mapObject.addControl(searchControl);
 
       this.$refs.map.mapObject.on('geosearch/showlocation', result => {
         //console.log(result.location.y, Number(result.location.x).toFixed(8)); // location + marker
         //this.formBuilding.address = `${result.location.raw.address.hotel},  ${result.location.raw.address.suburb},  ${result.location.raw.address.road},  ${result.location.raw.address.house_number} `
-        this.formBuilding.latitude = Number(result.location.y).toFixed(8)
-        this.formBuilding.longitude = Number(result.location.x).toFixed(8)
+        this.formBuilding.latitude = Number(result.location.y).toFixed(8);
+        this.formBuilding.longitude = Number(result.location.x).toFixed(8);
         this.formBuilding.address = result.location.label
           .split(',')
           .filter(function(addr) {
-            var non_latin = /[\u0250-\ue007f]/g
-            return !non_latin.test(addr)
+            var non_latin = /[\u0250-\ue007f]/g;
+            return !non_latin.test(addr);
           })
           .join(',')
-          .substring(0, this.max_address_length)
-      })
+          .substring(0, this.max_address_length);
+      });
     },
 
     filter() {
-      this.$store.dispatch('updateAccommodationsList', {
-        event_id: this.$route.params.event_id,
-        filterParams: this.filterParams
-      })
-      this.$store.commit('deleteSelectedAccommodation')
-      this.$store.commit('deleteSelectedRooms')
-      this.$store.commit('deleteSelectedBeds')
-      this.selectedAccommodations = []
-      this.selectedRooms = []
-      this.selectedBeds = []
-      this.checkAll = this.selectedAccommodations.length == 0 ? false : true
+      this.reloadAccommodations();
+      this.clearSelectedItems();
+      this.checkAll = this.selectedAccommodations.length == 0 ? false : true;
     },
     resetFilterForm() {
-      this.filterParams.name = ''
-      this.filterParams.status = ''
-      this.filterParams.door_type = ''
-      this.filterParams.bed_type = ''
-      this.filterParams.slot = ''
-      this.filterParams.sheets_required = ''
-      this.filterParams.is_optional = ''
-      this.filter()
+      this.filterParams.name = '';
+      this.filterParams.status = '';
+      this.filterParams.door_type = '';
+      this.filterParams.bed_type = '';
+      this.filterParams.slot = '';
+      this.filterParams.sheets_required = '';
+      this.filterParams.is_optional = '';
+      this.filter();
     },
 
     checkOccurrencePlan() {
-      this.$store.dispatch('checkAccommodationsPlan')
+      this.$store.dispatch('checkAccommodationsPlan');
     }
   }
-}
+};
 </script>
 
-<style lang="scss" scoped>
-@import '~element-ui/packages/theme-chalk/src/tree.scss';
-@import url('//unpkg.com/element-ui@2.4.4/lib/theme-chalk/index.css');
+<style lang='scss' scoped>
+@import "~element-ui/packages/theme-chalk/src/tree.scss";
+@import url("//unpkg.com/element-ui@2.4.4/lib/theme-chalk/index.css");
 
 .page-wrapper {
   padding: 5px 15px 40px 15px;
