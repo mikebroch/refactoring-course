@@ -742,6 +742,19 @@ export default {
         longitude: null
       },
 
+      newRoom: {
+        label: 'Door',
+        room_door: 'Y'
+      },
+
+      newBed: {
+        label: `Bed | single |  false`,
+        bed_type: 'BD',
+        slot: 'S',
+        sheets_required: false,
+        is_optional: false,
+      },
+
       emptyBuilding: {
         name: '',
         building_type: null,
@@ -844,9 +857,7 @@ export default {
   },
 
   beforeDestroy() {
-    this.$store.commit('deleteSelectedAccommodation');
-    this.$store.commit('deleteSelectedRooms');
-    this.$store.commit('deleteSelectedBeds');
+    this.clearSelectedItems();
   },
   mounted() {
     L.Icon.Default.imagePath = 'https://unpkg.com/leaflet@1.3.4/dist/images/';
@@ -1000,29 +1011,15 @@ export default {
     },
     /* Create Room */
     async createNewRoom(data) {
-      const newChild = {
-        id: data.id,
-        label: 'Door', //resolve conflict
-        children: [],
-        room_door: 'Y',
-        accommodation: data.id
-      };
-      await this.$store.dispatch('createNewRoom', newChild);
+      let payload = Object.assign({accommodation: data.id}, this.newRoom)
+      await this.$store.dispatch('createNewRoom', payload);
       this.clearSelectedItems();
       this.reloadAccommodations();
     },
     /* Create Bed */
     async createNewBed(data) {
-      const newChild = {
-        id: null,
-        label: `Bed | single |  false`, //resolve conflict
-        bed_type: 'BD',
-        slot: 'S',
-        sheets_required: false,
-        is_optional: false,
-        room: data.id
-      };
-      await this.$store.dispatch('createNewBed', newChild);
+      let payload = Object.assign({room: data.id}, this.newBed) 
+      await this.$store.dispatch('createNewBed', payload);
       this.clearSelectedItems();
       this.reloadAccommodations();
     },
