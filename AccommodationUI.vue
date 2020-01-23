@@ -1018,7 +1018,7 @@ export default {
     },
     /* Create Bed */
     async createNewBed(data) {
-      let payload = Object.assign({room: data.id}, this.newBed) 
+      let payload = Object.assign({room: data.id}, this.newBed)
       await this.$store.dispatch('createNewBed', payload);
       this.clearSelectedItems();
       this.reloadAccommodations();
@@ -1037,10 +1037,8 @@ export default {
     },
     /* Create-update Building */
     async submitBuildingData(formBuilding) {
-      if (this.dialogBuilding.submitButton === 'Create') {
-        if (this.formBuilding.stars == 0) {
-          this.formBuilding.stars = null;
-        }
+      if (this.dialogBuilding.submitButton === 'Create' || this.formBuilding.stars == 0) {
+        this.formBuilding.stars = null;
         await this.$store.dispatch('createNewBuilding', this.formBuilding);
         this.$store.dispatch('updateBuildingsList');
       } else {
@@ -1060,10 +1058,18 @@ export default {
         this.$refs.tree.setCheckedNodes([]);
       }
     },
+
+
+    checkSelectedAccommodations() {
+      this.checkAll = (this.selectedAccommodations.length != 0 &&
+            this.selectedAccommodations.length ===
+              this.$store.getters.getListOfAccommodations.length) ||
+          this.selectedAccommodations.length ===
+            this.$store.getters.getListOfAccommodationsResettlement.length ?  true : false
+    },
     /* Select */
     handleSelectionChange(selectedData, checked) {
-      if (selectedData.type == 'accommodation') {
-        if (checked) {
+      if (selectedData.type == 'accommodation' && checked ) {
           this.selectedAccommodations.push(selectedData);
         } else {
           this.selectedAccommodations.splice(
@@ -1071,23 +1077,12 @@ export default {
             1
           );
         }
-        if (
-          (this.selectedAccommodations.length != 0 &&
-            this.selectedAccommodations.length ===
-              this.$store.getters.getListOfAccommodations.length) ||
-          this.selectedAccommodations.length ===
-            this.$store.getters.getListOfAccommodationsResettlement.length
-        ) {
-          this.checkAll = true;
-        } else {
-          this.checkAll = false;
-        }
+        this.checkSelectedEntity()
         this.$store.commit(
           'addSelectedAccommodations',
           this.selectedAccommodations
         );
-      } else if (selectedData.type == 'room') {
-        if (checked) {
+      if (selectedData.type == 'room' && checked ) {
           this.selectedRooms.push(selectedData);
         } else {
           this.selectedRooms.splice(
@@ -1096,10 +1091,9 @@ export default {
           );
         }
         this.$store.commit('addSelectedRooms', this.selectedRooms);
-      } else {
-        if (checked) {
+      if (selectedData.type == 'bed' && checked)  {
           this.selectedBeds.push(selectedData);
-        } else {
+            }else {
           this.selectedBeds.splice(
             this.selectedBeds.findIndex(v => v === selectedData),
             1
