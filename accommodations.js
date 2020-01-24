@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
   state: {
@@ -8,26 +8,26 @@ export default {
   },
   mutations: {
     updateAccommodations(state, data) {
-      state.accommodations.splice(0, state.accommodations.length)
+      state.accommodations.splice(0, state.accommodations.length);
       for (let index = 0; index < data.length; index++) {
-        state.accommodations.push(data[index])
+        state.accommodations.push(data[index]);
       }
     },
     addSelectedAccommodations(state, payload) {
-      state.selectedAccommodations = payload
+      state.selectedAccommodations = payload;
     },
     deleteSelectedAccommodation(state) {
-      state.selectedAccommodations = []
+      state.selectedAccommodations = [];
     },
     delete_arb_message(state, payload) {
-      state.delete_arb_message = payload
+      state.delete_arb_message = payload;
     }
   },
   actions: {
     /* read */
     async updateAccommodationsList({ dispatch, commit, rootState }, payload) {
       try {
-        commit('setLoading', true)
+        commit('setLoading', true);
         const response = await axios.get(
           rootState.host + '/api/accommodations/',
           {
@@ -43,29 +43,29 @@ export default {
               is_optional: payload.filterParams.is_optional
             }
           }
-        )
-        commit('updateAccommodations', response.data.results)
-        commit('setLoading', false)
+        );
+        commit('updateAccommodations', response.data.results);
+        commit('setLoading', false);
       } catch (e) {
-        commit('setError', e.response.data)
-        commit('setLoading', false)
+        commit('setError', e.response.data);
+        commit('setLoading', false);
       }
     },
     /*  update */
     async updateAccommodation({ dispatch, commit, rootState }, accommodation) {
       try {
-        commit('setLoading', true)
+        commit('setLoading', true);
         const response = await axios.put(
           this.state.host + '/api/accommodations/' + accommodation.id + '/',
           accommodation
-        )
-        commit('setLoading', false)
-        commit('setMessage', 'Accommodation was successfully updated')
-        rootState.dialog.visible = !rootState.dialog.visible
-        return response.data
+        );
+        commit('setLoading', false);
+        commit('setMessage', 'Accommodation was successfully updated');
+        rootState.dialog.visible = !rootState.dialog.visible;
+        return response.data;
       } catch (e) {
-        commit('setError', e.response.data)
-        commit('setLoading', false)
+        commit('setError', e.response.data);
+        commit('setLoading', false);
       }
     },
     /* delete */
@@ -73,38 +73,38 @@ export default {
       let requestData = {
         accommodation_ids: rootState.accommodations.selectedAccommodations.map(
           accommodation => {
-            return accommodation.id
+            return accommodation.id;
           }
         ),
         room_ids: rootState.rooms.selectedRooms.map(room => {
-          return room.id
+          return room.id;
         }),
         bed_ids: rootState.beds.selectedBeds.map(bed => {
-          return bed.id
+          return bed.id;
         })
-      }
+      };
       try {
         const response = await axios.post(
           this.state.host + '/api/delete_arb_message/',
           requestData
-        )
-        commit('delete_arb_message', response.data)
+        );
+        commit('delete_arb_message', response.data);
       } catch (e) {
-        commit('setError', e.response.data)
+        commit('setError', e.response.data);
       }
     },
 
     async deleteAccommodation({ dispatch, commit, rootState }, accommodation) {
       try {
-        commit('setLoading', true)
+        commit('setLoading', true);
         const response = await axios.delete(
           this.state.host + '/api/accommodations/' + accommodation.id + '/'
-        )
-        commit('setLoading', false)
-        commit('setMessage', 'Accommodation was successfully deleted')
+        );
+        commit('setLoading', false);
+        commit('setMessage', 'Accommodation was successfully deleted');
       } catch (e) {
-        commit('setError', e.response.data)
-        commit('setLoading', false)
+        commit('setError', e.response.data);
+        commit('setLoading', false);
       }
     },
     /* create */
@@ -113,18 +113,18 @@ export default {
       accommodation
     ) {
       try {
-        commit('setLoading', true)
+        commit('setLoading', true);
         const response = await axios.post(
           this.state.host + '/api/accommodations/',
           accommodation
-        )
-        commit('setLoading', false)
-        commit('setMessage', 'New accommodation was successfully created')
-        rootState.dialog.visible = !rootState.dialog.visible
-        return response.data
+        );
+        commit('setLoading', false);
+        commit('setMessage', 'New accommodation was successfully created');
+        rootState.dialog.visible = !rootState.dialog.visible;
+        return response.data;
       } catch (e) {
-        commit('setError', e.response.data)
-        commit('setLoading', false)
+        commit('setError', e.response.data);
+        commit('setLoading', false);
       }
     }
   },
@@ -133,45 +133,31 @@ export default {
       const accommodations = state.accommodations.map(accommodation => {
         const rooms = accommodation.rooms.map(room => {
           const beds = room.beds.map(bed => {
-            var bedTypeView
-            var iconBed
-            if (bed.bed_type == 'BD') {
-              bedTypeView = 'Bed'
-            } else if (bed.bed_type == 'SF') {
-              bedTypeView = 'Sofa'
-            } else if (bed.bed_type == 'CD') {
-              bedTypeView = 'Cod'
-              iconBed = 'icon-cot'
-            } else if (bed.bed_type == 'IN') {
-              bedTypeView = 'Inflatable'
-              iconBed = 'icon-mattress'
-            } else {
-              bedTypeView = 'Is missing'
-            }
+            var bedTypeView = '',
+              iconBed = '';
+            if (bed.bed_type == 'BD') return (bedTypeView = 'Bed');
+            if (bed.bed_type == 'SF') return (bedTypeView = 'Sofa');
+            if (bed.bed_type == 'CD')
+              return (bedTypeView = 'Cod'), (iconBed = 'icon-cot');
+            if (bed.bed_type == 'IN')
+              return (bedTypeView = 'Inflatable'), (iconBed = 'icon-mattress');
+            if ((bed.bed_type = '')) return (bedTypeView = 'Is missing');
+            if (bed.bed_type == 'BD' && bed.slot == 'S')
+              return (iconBed = 'icon-single-bed');
+            if (bed.bed_type == 'BD' && bed.slot == 'D')
+              return (iconBed = 'icon-double-bed');
+            if (bed.bed_type == 'SF' && bed.slot == 'S')
+              return (iconBed = 'icon-single-sofa');
+            if (bed.bed_type == 'SF' && bed.slot == 'D')
+              return (iconBed = 'icon-double-sofa');
 
-            if (bed.bed_type == 'BD' && bed.slot == 'S') {
-              iconBed = 'icon-single-bed'
-            } else if (bed.bed_type == 'BD' && bed.slot == 'D') {
-              iconBed = 'icon-double-bed'
-            } else if (bed.bed_type == 'SF' && bed.slot == 'S') {
-              iconBed = 'icon-single-sofa'
-            } else if (bed.bed_type == 'SF' && bed.slot == 'D') {
-              iconBed = 'icon-double-sofa'
-            }
-            var bedSlotView
-            if (bed.slot == 'D') {
-              bedSlotView = 'Double'
-            } else if (bed.slot == 'S') {
-              bedSlotView = 'Single'
-            } else {
-              bedSlotView = ''
-            }
-            var bedIsOptional
-            if (bed.is_optional == true) {
-              bedIsOptional = 'is Optional'
-            } else {
-              bedIsOptional = ''
-            }
+            var bedSlotView = '';
+            if (bed.slot == 'D') return (bedSlotView = 'Double');
+            if (bed.slot == 'S') return (bedSlotView = 'Single');
+
+            var bedIsOptional = '';
+            if (bed.is_optional == true) return (bedIsOptional = 'is Optional');
+
             return {
               id: bed.id,
               key: Math.random(),
@@ -182,20 +168,18 @@ export default {
               is_optional: bed.is_optional,
               type: 'bed',
               icon: iconBed
-            }
-          })
-          var roomView
-          var iconRoom
-          if (room.room_door == 'Y') {
-            roomView = 'with door'
-            iconRoom = 'icon-door'
-          } else if (room.room_door == 'N') {
-            roomView = 'without door'
-            iconRoom = 'icon-door-none'
-          } else if (room.room_door == 'L') {
-            roomView = 'door with lock'
-            iconRoom = 'icon-door-lock'
-          }
+            };
+          });
+
+          var roomView = '';
+          var iconRoom = '';
+          if (room.room_door == 'Y')
+            return (roomView = 'with door'), (iconRoom = 'icon-door');
+          if (room.room_door == 'N')
+            return (roomView = 'without door'), (iconRoom = 'icon-door-none');
+          if (room.room_door == 'L')
+            return (roomView = 'door with lock'), (iconRoom = 'icon-door-lock');
+
           return {
             id: room.id,
             key: Math.random(),
@@ -204,10 +188,10 @@ export default {
             room_door: room.room_door,
             icon: iconRoom,
             type: 'room'
-          }
-        })
+          };
+        });
 
-        const accommodationsTree = {
+        return {
           id: accommodation.id,
           key: Math.random(),
           label: `${accommodation.name}`,
@@ -219,53 +203,52 @@ export default {
           status: accommodation.status,
           availability: accommodation.availability,
           children: rooms
-        }
-        return accommodationsTree
-      })
-      return accommodations
+        };
+      });
+      return accommodations;
     },
     getListOfAccommodationsResettlement(state) {
       const accommodations = state.accommodations.map(accommodation => {
         const rooms = accommodation.rooms.map(room => {
           const beds = room.beds.map(bed => {
-            var bedTypeView
-            var iconBed
+            var bedTypeView;
+            var iconBed;
             if (bed.bed_type == 'BD') {
-              bedTypeView = 'Bed'
+              bedTypeView = 'Bed';
             } else if (bed.bed_type == 'SF') {
-              bedTypeView = 'Sofa'
+              bedTypeView = 'Sofa';
             } else if (bed.bed_type == 'CD') {
-              bedTypeView = 'Cod'
-              iconBed = 'icon-cot'
+              bedTypeView = 'Cod';
+              iconBed = 'icon-cot';
             } else if (bed.bed_type == 'IN') {
-              bedTypeView = 'Inflatable'
-              iconBed = 'icon-mattress'
+              bedTypeView = 'Inflatable';
+              iconBed = 'icon-mattress';
             } else {
-              bedTypeView = 'Is missing'
+              bedTypeView = 'Is missing';
             }
 
             if (bed.bed_type == 'BD' && bed.slot == 'S') {
-              iconBed = 'icon-single-bed'
+              iconBed = 'icon-single-bed';
             } else if (bed.bed_type == 'BD' && bed.slot == 'D') {
-              iconBed = 'icon-double-bed'
+              iconBed = 'icon-double-bed';
             } else if (bed.bed_type == 'SF' && bed.slot == 'S') {
-              iconBed = 'icon-single-sofa'
+              iconBed = 'icon-single-sofa';
             } else if (bed.bed_type == 'SF' && bed.slot == 'D') {
-              iconBed = 'icon-double-sofa'
+              iconBed = 'icon-double-sofa';
             }
-            var bedSlotView
+            var bedSlotView;
             if (bed.slot == 'D') {
-              bedSlotView = 'Double'
+              bedSlotView = 'Double';
             } else if (bed.slot == 'S') {
-              bedSlotView = 'Single'
+              bedSlotView = 'Single';
             } else {
-              bedSlotView = ''
+              bedSlotView = '';
             }
-            var bedIsOptional
+            var bedIsOptional;
             if (bed.is_optional == true) {
-              bedIsOptional = 'is Optional'
+              bedIsOptional = 'is Optional';
             } else {
-              bedIsOptional = ''
+              bedIsOptional = '';
             }
             return {
               id: bed.id,
@@ -278,19 +261,19 @@ export default {
               type: 'bed',
               disabled: true,
               icon: iconBed
-            }
-          })
-          var roomView
-          var iconRoom
+            };
+          });
+          var roomView;
+          var iconRoom;
           if (room.room_door == 'Y') {
-            roomView = 'with door'
-            iconRoom = 'icon-door'
+            roomView = 'with door';
+            iconRoom = 'icon-door';
           } else if (room.room_door == 'N') {
-            roomView = 'without door'
-            iconRoom = 'icon-door-none'
+            roomView = 'without door';
+            iconRoom = 'icon-door-none';
           } else if (room.room_door == 'L') {
-            roomView = 'door with lock'
-            iconRoom = 'icon-door-lock'
+            roomView = 'door with lock';
+            iconRoom = 'icon-door-lock';
           }
           return {
             id: room.id,
@@ -301,8 +284,8 @@ export default {
             icon: iconRoom,
             disabled: true,
             type: 'room'
-          }
-        })
+          };
+        });
         const accommodationsTree = {
           id: accommodation.id,
           key: Math.random(),
@@ -315,14 +298,14 @@ export default {
           status: accommodation.status,
           availability: accommodation.availability,
           children: rooms
-        }
+        };
 
-        return accommodationsTree
-      })
-      return accommodations
+        return accommodationsTree;
+      });
+      return accommodations;
     },
     getListOfAccommodationsBuilding(state) {
-      return state.accommodations
+      return state.accommodations;
     }
   }
-}
+};
