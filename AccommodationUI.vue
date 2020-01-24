@@ -155,7 +155,7 @@
                 </p>
                 <div style="text-align: right;">
                   <el-button size="mini" type="text" @click="active = false">Cancel</el-button>
-                  <el-button type="danger" size="mini" @click="deleteSelectedAccommodations">Confirm</el-button>
+                  <el-button type="danger" size="mini" @click="deleteSelectedItems">Confirm</el-button>
                 </div>
                 <el-button
                   style="margin-left: 0px"
@@ -1102,8 +1102,22 @@ export default {
         this.$store.commit('addSelectedBeds', this.selectedBeds);
       }
     },
-    /* Delete */
-    async deleteSelectedAccommodations() {
+    /* Delete rooms */
+    async deleteSelectedRooms() {
+       await Promise.all(
+        this.$store.state.rooms.selectedRooms.map(item =>
+          this.$store.dispatch('deleteRoom', item)
+        )
+      );
+      this.reloadAccommodations()
+        .then(() => this.$store.commit('deleteSelectedRooms'))
+        .then(() => (this.selectedRooms = []))
+        .then(() => {
+          this.active = false;
+        });
+    },
+    /* Delete beds*/
+    async deleteSelectedBeds() {
       await Promise.all(
         this.$store.state.beds.selectedBeds.map(item =>
           this.$store.dispatch('deleteBed', item)
@@ -1115,17 +1129,9 @@ export default {
         .then(() => {
           this.active = false;
         });
-      await Promise.all(
-        this.$store.state.rooms.selectedRooms.map(item =>
-          this.$store.dispatch('deleteRoom', item)
-        )
-      );
-      this.reloadAccommodations()
-        .then(() => this.$store.commit('deleteSelectedRooms'))
-        .then(() => (this.selectedRooms = []))
-        .then(() => {
-          this.active = false;
-        });
+    },
+    /* Delete accommodations */
+    async deleteSelectedAccommodations() {
       await Promise.all(
         this.$store.state.accommodations.selectedAccommodations.map(item =>
           this.$store.dispatch('deleteAccommodation', item)
@@ -1142,6 +1148,12 @@ export default {
         .then(() => {
           this.active = false;
         });
+    },
+    /* Delete */
+    async deleteSelectedItems() {
+      if( this.$store.state.rooms.selectedRooms.length > 0) return this.deleteSelectedBeds()
+      if( this.$store.state.rooms.selectedRooms.length > 0) return this.deleteSelectedRooms()
+      if( this.$store.state.accommodations.selectedAccommodations > 0) return this.deleteSelectedAccommodations()
     },
 
     openDialog(attr) {
